@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Animal Accident Detection System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .location-container h2 {
+            font-weight: bold;
+            font-style: italic;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-white">
+    <header class="bg-white-800 py-4 flex items-center justify-between px-8">
+        <img src="logo.png" alt="Logo" class="h-30">
+        <h1 class="text-gray text-center text-8xl">AniPal-Animal Accident Detection System</h1>
+    </header>
+
+    <div class="container mx-auto px-8 py-8">
+        <div class="relative aspect-w-16 aspect-h-9 w-full">
+            <video src="accident.mp4" controls autoplay class="w-full h-full"></video>
+        </div>
+        <p class="text-xl mt-4">Animal accident detected!</p>
+        <p class="text-xl mt-4">Send help to the injured animal ASAP!</p>
+        <form id="helpForm" class="mt-4">
+            <input type="hidden" id="helpStatus" value="pending">
+        </form>
+        <div class="location-container">
+            <h2 class="font-bold italic text-lg">Accident Location</h2>
+        </div>
+        <div id="map" class="mt-4 h-96"></div>
+        <div id="message" class="text-lg mt-4"></div>
+        <button id="acceptButton" class="bg-green-500 text-white py-2 px-4 rounded mt-4">Accept Request</button>
+        <button id="mapButton" class="bg-blue-500 text-white py-2 px-4 rounded mt-4">Open in Google Maps</button>
+    </div>
+    <footer>
+        <p>&copy; 2023 Anipal. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function getCameraLocation() {
+            // Replace these coordinates with the actual camera location
+            var cameraLatitude = 12.9692;
+            var cameraLongitude = 79.1559;
+
+            var mapDiv = document.getElementById("map");
+
+            // Create a new map centered at the camera location
+            var map = new google.maps.Map(mapDiv, {
+                center: { lat: cameraLatitude, lng: cameraLongitude },
+                zoom: 12
+            });
+
+            // Create a marker at the camera location
+            var marker = new google.maps.Marker({
+                position: { lat: cameraLatitude, lng: cameraLongitude },
+                map: map,
+                title: "Camera Location"
+            });
+        }
+
+        // Handle accept button click
+        var acceptButton = document.getElementById("acceptButton");
+        acceptButton.addEventListener("click", function () {
+            // Change help status to accepted
+            document.getElementById("helpStatus").value = "accepted";
+
+            // Disable the accept button
+            acceptButton.disabled = true;
+
+            // Notify other clinics
+            var message = document.getElementById("message");
+            message.textContent = "Help is on the way. No further action required.";
+        });
+
+        // Handle map button click
+        var mapButton = document.getElementById("mapButton");
+        mapButton.addEventListener("click", function () {
+            // Replace these coordinates with the actual accident location
+            var accidentLatitude = 12.9692 ;
+            var accidentLongitude = 79.1559;
+
+            // Open Google Maps in a new tab with the accident location
+            var url = "https://www.google.com/maps?q=" + accidentLatitude + "," + accidentLongitude;
+            window.open(url, "_blank");
+        });
+
+        // Callback function when Google Maps API is loaded
+        function initializeMap() {
+            getCameraLocation();
+        }
+
+        // Load Google Maps API with your API key
+        function loadGoogleMaps() {
+            var script = document.createElement("script");
+            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyBIU3PqzeDzEpTXct1hvWjCncrwdsiKpig&callback=initializeMap";
+            document.body.appendChild(script);
+        }
+
+        // Call the function to load Google Maps API
+        loadGoogleMaps();
+    </script>
+</body>
+</html>
